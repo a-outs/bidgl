@@ -4,6 +4,8 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { string } from 'prop-types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import AuctionItems from './AuctionItems';
+import GetItemData from './ItemData';
 
 export default function App() {
   return (
@@ -11,11 +13,13 @@ export default function App() {
       <Text>Open up App.js to start working on your app!</Text>
       <StatusBar style="auto" />
       <LocationSelection />
+      <AuctionItems itemData={GetItemData()} />
     </View>
   );
 }
 
 const affiliateListKey = 'affiliate-list';
+const selectedLocationsKey = 'selected-locations';
 
 function LocationSelection() {
   const [affiliateList, updateAffiliateList] = useState([]);
