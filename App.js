@@ -10,15 +10,24 @@ export default function App() {
     <View style={styles.container}>
       <Text>Open up App.js to start working on your app!</Text>
       <StatusBar style="auto" />
-      <ViewLocations />
+      <LocationSelection />
     </View>
   );
 }
 
 const affiliateListKey = 'affiliate-list';
 
-function ViewLocations() {
+function LocationSelection() {
   const [affiliateList, updateAffiliateList] = useState([]);
+  const [checkedAffiliates, updateCheckedAffiliates] = useState([]);
+
+  const locationChecked = (affiliate, checked) => {
+    if (checked) {
+      updateCheckedAffiliates((l) => [...l, affiliate]);
+    } else {
+      updateCheckedAffiliates((l) => l.filter((a) => a !== affiliate));
+    }
+  };
 
   useEffect(() => {
     const fetchAffiliates = async () => {
@@ -43,7 +52,13 @@ function ViewLocations() {
 
         // construct react components
         affiliateResponse.forEach((affiliate) => {
-          affiliates.push(<Location key={affiliate.id} location={affiliate.name} />);
+          affiliates.push(
+            <Location
+              key={affiliate.id}
+              location={affiliate.name}
+              onLocationCheck={locationChecked}
+            />,
+          );
         });
         updateAffiliateList(affiliates);
       } catch (e) {
@@ -59,24 +74,46 @@ function ViewLocations() {
   return (
     <View
       style={{
-        flexDirection: 'row',
         height: 100,
         padding: 20,
       }}
     >
-      <View style={{ backgroundColor: 'blue', flex: 0.3 }} />
-      <View style={{ backgroundColor: 'red', flex: 0.5 }} />
       <Text>Hello World!</Text>
-      <ul>{affiliateLi}</ul>
+      <View style={styles.affiliateListStyle}>{affiliateLi}</View>
+      <View>
+        {checkedAffiliates.map((affiliate) => (
+          <Text
+            style={{ textAlign: 'center' }}
+            key={affiliate}
+          >
+            {affiliate}
+          </Text>
+        ))}
+      </View>
     </View>
   );
 }
 
-function Location({ location }) {
+function Location({ location, onLocationCheck }) {
+  const [checked, setChecked] = useState(false);
+
+  const handleChange = () => {
+    const state = !checked;
+    setChecked(state);
+    onLocationCheck(location, state);
+  };
+
   return (
-    <li>
-      {location}
-    </li>
+    <View style={{ backgroundColor: checked ? 'gray' : 'white' }}>
+      <label>
+        <input
+          type="checkbox"
+          checked={checked}
+          onChange={handleChange}
+        />
+        {location}
+      </label>
+    </View>
   );
 }
 
@@ -100,5 +137,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  affiliateListStyle: {
+    flexDirection: 'row',
   },
 });
