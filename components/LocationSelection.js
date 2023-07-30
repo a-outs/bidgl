@@ -51,6 +51,8 @@ export default function LocationSelection() {
           });
         }
 
+        affiliateResponse = affiliateResponse.sort((a, b) => a.name > b.name);
+
         // construct react components
         affiliateResponse.forEach((affiliate) => {
           affiliates.push(

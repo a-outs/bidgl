@@ -9,6 +9,7 @@ const styles = StyleSheet.create({
   },
   affiliateListStyle: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
   },
 });
 
