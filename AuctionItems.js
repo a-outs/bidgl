@@ -63,43 +63,10 @@ function AuctionItem({ item }) {
 }
 
 export default function AuctionItems({ itemData }) {
-  // console.log(itemData);
-  // console.log(itemData.length);
-  // const { length } = itemData;
   return (
-
     <View style={styles.deck}>
-      {/* <View style={styles.card}>
-        <Image style={styles.thumb} source={{ uri: itemData.items[0].images[0].thumb_url }} />
 
-        <View>
-          <Text>{itemData.items[0].title}</Text>
-          <Text>
-            Current Bid: $
-            {' '}
-            {itemData.items[0].current_bid}
-          </Text>
-        </View>
-      </View> */}
-      {/* map returns an array, (item) is reference for each object in array, and => tells it what to return given that item */}
       {itemData.items.map((item) => <AuctionItem item={item} />)}
     </View>
-
-  // <View>
-  //   <Image
-  //     style={styles.thumb}
-  //     source={image}
-  //   />
-  //   <View style={styles.infoContainer}>
-  //     <Text style={styles.name}>{name}</Text>
-  //     <Text style={styles.price}>
-  //       $
-  //       {' '}
-  //       {price}
-  //     </Text>
-  //   </View>
-  //   {/* <Text>Auction items will be here</Text>
-  //   <Text>itemData</Text> */}
-  // </View>
   );
 }
