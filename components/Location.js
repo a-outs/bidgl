@@ -1,3 +1,4 @@
+import { func, shape } from 'prop-types';
 import React, { useState } from 'react';
 import { View } from 'react-native';
 
@@ -12,11 +13,12 @@ export default function Location({ location, onLocationCheck }) {
 
   return (
     <View style={{ backgroundColor: checked ? 'gray' : 'white' }}>
-      <label>
+      <label htmlFor={location.url}>
         <input
           type="checkbox"
           checked={checked}
           onChange={handleChange}
+          id={location.url}
         />
         {location.name}
       </label>
@@ -25,8 +27,6 @@ export default function Location({ location, onLocationCheck }) {
 }
 
 Location.propTypes = {
-};
-
-Location.defaultProps = {
-  location: {},
+  location: shape({}).isRequired,
+  onLocationCheck: func.isRequired,
 };

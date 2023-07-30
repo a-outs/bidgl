@@ -1,5 +1,6 @@
 import { Text, View } from 'react-native';
 import React from 'react';
+import { shape } from 'prop-types';
 import AuctionList from './AuctionList';
 
 export default function SelectedLocation({ location }) {
@@ -16,3 +17,7 @@ export default function SelectedLocation({ location }) {
 
   );
 }
+
+SelectedLocation.propTypes = {
+  location: shape({}).isRequired,
+};

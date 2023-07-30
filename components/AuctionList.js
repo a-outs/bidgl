@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import axios from 'axios';
+import { shape, string } from 'prop-types';
 import Auction from './Auction';
 
 export default function AuctionList({ location }) {
@@ -19,3 +20,7 @@ export default function AuctionList({ location }) {
     </View>
   );
 }
+
+AuctionList.propTypes = {
+  location: shape({ url: string }).isRequired,
+};
