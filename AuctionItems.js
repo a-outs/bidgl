@@ -1,7 +1,7 @@
 // import { View, Text } from 'react-native-web';
 import React from 'react';
 import {
-  Text, View, StyleSheet, Image,
+  Text, View, Image, Linking, StyleSheet,
 } from 'react-native';
 
 const styles = StyleSheet.create({
@@ -43,6 +43,11 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
 
+  hyperlinkStyle: {
+    fontSize: 22,
+    color: 'blue',
+  },
+
 });
 
 function AuctionItem({ item }) {
@@ -51,7 +56,14 @@ function AuctionItem({ item }) {
       <Image style={styles.thumb} source={{ uri: item.images[0].thumb_url }} />
 
       <View>
-        <Text>{item.title}</Text>
+        <Text
+          style={styles.hyperlinkStyle}
+          onPress={() => {
+            Linking.openURL(item.item_url);
+          }}
+        >
+          {item.title}
+        </Text>
         <Text>
           Current Bid: $
           {' '}
