@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { shape, string } from 'prop-types';
 import axios, { toFormData } from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import AuctionItems from './AuctionItems';
 
 export default function Auction({ auction }) {
   const [items, setItems] = useState(null);
@@ -43,7 +44,7 @@ export default function Auction({ auction }) {
         {auction.title}
       </Text>
       <View>
-        {items !== null ? items.items.map((item) => <Text key={item.id}>{item.title}</Text>) : 'Loading...'}
+        {items !== null ? <AuctionItems itemData={items} /> : 'Loading...'}
       </View>
     </View>
   );
