@@ -7,7 +7,7 @@ export default function SelectedLocation({ location }) {
   return (
     <View>
       <Text
-        style={{ textAlign: 'center' }}
+        style={{ textAlign: 'center', fontSize: 24 }}
       >
         {location.name}
       </Text>

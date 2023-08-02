@@ -1,13 +1,12 @@
 import { func, shape } from 'prop-types';
-import React, { useState } from 'react';
-import { View } from 'react-native';
+import React from 'react';
+import { Text, View } from 'react-native';
 
-export default function Location({ location, onLocationCheck }) {
-  const [checked, setChecked] = useState(false);
+export default function Location({ location, onLocationCheck, checkedAffiliates }) {
+  const checked = checkedAffiliates.some((a) => a.id === location.id);
 
   const handleChange = () => {
     const state = !checked;
-    setChecked(state);
     onLocationCheck(location, state);
   };
 
@@ -16,11 +15,12 @@ export default function Location({ location, onLocationCheck }) {
       <label htmlFor={location.url}>
         <input
           type="checkbox"
-          checked={checked}
+          checked={checkedAffiliates.some((a) => a.id === location.id)}
           onChange={handleChange}
           id={location.url}
+          style={{ display: 'none' }}
         />
-        {location.name}
+        <Text>{location.name}</Text>
       </label>
     </View>
   );
@@ -29,4 +29,5 @@ export default function Location({ location, onLocationCheck }) {
 Location.propTypes = {
   location: shape({}).isRequired,
   onLocationCheck: func.isRequired,
+  checkedAffiliates: shape([]).isRequired,
 };

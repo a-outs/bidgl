@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import Location from './Location';
 import SelectedLocation from './SelectedLocation';
 import styles from '../AppStyles';
@@ -34,7 +34,6 @@ export default function LocationSelection() {
     const fetchAffiliates = async () => {
       // check local storage first
       try {
-        const affiliates = [];
         let affiliateResponse;
 
         const jsonValue = await AsyncStorage.getItem(affiliateListKey);
@@ -52,18 +51,7 @@ export default function LocationSelection() {
         }
 
         affiliateResponse = affiliateResponse.sort((a, b) => a.name > b.name);
-
-        // construct react components
-        affiliateResponse.forEach((affiliate) => {
-          affiliates.push(
-            <Location
-              key={affiliate.id}
-              location={affiliate}
-              onLocationCheck={locationChecked}
-            />,
-          );
-        });
-        updateAffiliateList(affiliates);
+        updateAffiliateList(affiliateResponse);
       } catch (e) {
         // error reading value
         console.error(e);
@@ -80,17 +68,23 @@ export default function LocationSelection() {
     fetchStoredCheckedAffiliates();
   }, []);
 
-  const affiliateLi = affiliateList.length > 0 ? affiliateList : <li> Loading... </li>;
-
   return (
     <View
       style={{
-        height: 100,
-        padding: 20,
+        alignItems: 'center',
+        maxWidth: 500,
       }}
     >
-      <Text>Hello World!</Text>
-      <View style={styles.affiliateListStyle}>{affiliateLi}</View>
+      <View style={styles.affiliateListStyle}>
+        {affiliateList.map((affiliate) => (
+          <Location
+            key={affiliate.id}
+            location={affiliate}
+            onLocationCheck={locationChecked}
+            checkedAffiliates={checkedAffiliates}
+          />
+        ))}
+      </View>
       <View>
         {checkedAffiliates.map((affiliate) => (
           <SelectedLocation

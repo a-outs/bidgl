@@ -78,7 +78,7 @@ export default function AuctionItems({ itemData }) {
   return (
     <View style={styles.deck}>
 
-      {itemData.items.map((item) => <AuctionItem item={item} />)}
+      {itemData.items.map((item) => <AuctionItem key={item.id} item={item} />)}
     </View>
   );
 }

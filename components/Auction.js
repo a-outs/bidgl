@@ -39,7 +39,7 @@ export default function Auction({ auction }) {
 
   return (
     <View>
-      <Text>
+      <Text style={{ fontSize: 18, textAlign: 'center' }}>
         {auction.title}
       </Text>
       <View>
