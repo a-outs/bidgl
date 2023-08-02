@@ -70,10 +70,7 @@ export default function LocationSelection() {
 
   return (
     <View
-      style={{
-        alignItems: 'center',
-        maxWidth: 500,
-      }}
+      style={styles.locationSelectionStyle}
     >
       <View style={styles.affiliateListStyle}>
         {affiliateList.map((affiliate) => (

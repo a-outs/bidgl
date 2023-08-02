@@ -12,6 +12,10 @@ const styles = StyleSheet.create({
     padding: 10,
     gap: 10,
   },
+  locationSelectionStyle: {
+    alignItems: 'center',
+    maxWidth: 700,
+  },
 });
 
 export default styles;

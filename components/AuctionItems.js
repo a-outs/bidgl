@@ -16,11 +16,11 @@ const styles = StyleSheet.create({
       width: 0,
     },
     elevation: 1,
-    marginVertical: 20,
-    marginHorizontal: 20,
+    marginVertical: 10,
+    marginHorizontal: 10,
   },
   thumb: {
-    height: 260,
+    height: 130,
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
     width: '100%',
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   name: {
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: 'bold',
   },
   price: {
