@@ -1,4 +1,5 @@
 // import { View, Text } from 'react-native-web';
+import { shape } from 'prop-types';
 import React from 'react';
 import {
   Text, View, Image, Linking, StyleSheet,
@@ -37,12 +38,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginBottom: 8,
   },
-
-  deck: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-
   hyperlinkStyle: {
     fontSize: 22,
     color: 'blue',
@@ -50,7 +45,7 @@ const styles = StyleSheet.create({
 
 });
 
-function AuctionItem({ item }) {
+export default function AuctionItem({ item }) {
   return (
     <View style={styles.card}>
       <Image style={styles.thumb} source={{ uri: item.images[0].thumb_url }} />
@@ -74,11 +69,8 @@ function AuctionItem({ item }) {
   );
 }
 
-export default function AuctionItems({ itemData }) {
-  return (
-    <View style={styles.deck}>
-
-      {itemData.items.map((item) => <AuctionItem key={item.id} item={item} />)}
-    </View>
-  );
-}
+AuctionItem.propTypes = {
+  item: shape({
+    images: shape([]),
+  }).isRequired,
+};
