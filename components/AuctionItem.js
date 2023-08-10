@@ -45,10 +45,10 @@ const styles = StyleSheet.create({
 
 });
 
-export default function AuctionItem({ item }) {
+export default function AuctionItem({ item, showImage }) {
   return (
     <View style={styles.card}>
-      <Image style={styles.thumb} source={{ uri: item.images[0].thumb_url }} />
+      <Image style={styles.thumb} source={{ uri: showImage ? item.images[0].thumb_url : '' }} />
 
       <View>
         <Text

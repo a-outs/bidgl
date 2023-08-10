@@ -6,6 +6,7 @@ import AuctionItem from './AuctionItem';
 
 export default function Auction({ auction }) {
   const [items, setItems] = useState(null);
+  const [showImages, setShowImages] = useState(false)
 
   useEffect(() => {
     const checkAndFetchItems = async () => {
@@ -38,7 +39,7 @@ export default function Auction({ auction }) {
           flexWrap: 'wrap',
         }}
       >
-        {items !== null ? items.items.map((item) => <AuctionItem key={item.id} item={item} />) : 'Loading...'}
+        {items !== null ? items.items.map((item) => <AuctionItem key={item.id} item={item} showImage={showImages} />) : <Text>Loading...</Text>}
       </View>
     </View>
   );
