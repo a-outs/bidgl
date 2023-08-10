@@ -39,8 +39,7 @@ export default function LocationSelection() {
         const jsonValue = await AsyncStorage.getItem(affiliateListKey);
         if (jsonValue != null) {
           affiliateResponse = JSON.parse(jsonValue);
-          console.log('Found affiliates in data store:');
-          console.log(affiliateResponse);
+          console.log('Found affiliates in data store!');
         } else {
           // now fetch from API
           await axios.get('https://www.bidrl.com/api/auctionfields').then((res) => {
@@ -50,7 +49,8 @@ export default function LocationSelection() {
           });
         }
 
-        affiliateResponse = affiliateResponse.sort((a, b) => a.name > b.name);
+        affiliateResponse.sort((a, b) => a.name.localeCompare(b.name));
+
         updateAffiliateList(affiliateResponse);
       } catch (e) {
         // error reading value
