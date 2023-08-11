@@ -2,11 +2,12 @@ import { Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { shape, string } from 'prop-types';
 import axios, { toFormData } from 'axios';
+import { Button } from 'react-native-web';
 import AuctionItem from './AuctionItem';
 
 export default function Auction({ auction }) {
   const [items, setItems] = useState(null);
-  const [showImages, setShowImages] = useState(false)
+  const [showImages, setShowImages] = useState(false);
 
   useEffect(() => {
     const checkAndFetchItems = async () => {
@@ -30,6 +31,7 @@ export default function Auction({ auction }) {
 
   return (
     <View>
+      <Button onPress={() => setShowImages(!showImages)} title={showImages ? 'hide images' : 'show images'} />
       <Text style={{ fontSize: 18, textAlign: 'center' }}>
         {auction.title}
       </Text>
@@ -39,7 +41,11 @@ export default function Auction({ auction }) {
           flexWrap: 'wrap',
         }}
       >
-        {items !== null ? items.items.map((item) => <AuctionItem key={item.id} item={item} showImage={showImages} />) : <Text>Loading...</Text>}
+        {items !== null
+          ? items.items.map(
+            (item) => <AuctionItem key={item.id} item={item} showImage={showImages} />,
+          )
+          : <Text>Loading...</Text>}
       </View>
     </View>
   );

@@ -1,5 +1,5 @@
 // import { View, Text } from 'react-native-web';
-import { shape } from 'prop-types';
+import { bool, shape } from 'prop-types';
 import React from 'react';
 import {
   Text, View, Image, Linking, StyleSheet,
@@ -73,4 +73,5 @@ AuctionItem.propTypes = {
   item: shape({
     images: shape([]),
   }).isRequired,
+  showImage: bool.isRequired,
 };
