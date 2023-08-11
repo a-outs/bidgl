@@ -5,9 +5,7 @@ import { View } from 'react-native';
 import Location from './Location';
 import SelectedLocation from './SelectedLocation';
 import styles from '../AppStyles';
-
-const affiliateListKey = 'affiliate-list';
-const selectedLocationsKey = 'selected-locations';
+import StorageKeys from '../StorageKeys';
 
 export default function LocationSelection() {
   const [affiliateList, updateAffiliateList] = useState([]);
@@ -24,7 +22,7 @@ export default function LocationSelection() {
       } else {
         output = list.filter((a) => a.id !== item.id);
       }
-      AsyncStorage.setItem(selectedLocationsKey, JSON.stringify(output));
+      AsyncStorage.setItem(StorageKeys.selectedLocationsKey, JSON.stringify(output));
       return output;
     };
     updateCheckedAffiliates((l) => updateAndStoreList(l, affiliate, checked));
@@ -36,7 +34,7 @@ export default function LocationSelection() {
       try {
         let affiliateResponse;
 
-        const jsonValue = await AsyncStorage.getItem(affiliateListKey);
+        const jsonValue = await AsyncStorage.getItem(StorageKeys.affiliateListKey);
         if (jsonValue != null) {
           affiliateResponse = JSON.parse(jsonValue);
           console.log('Found affiliates in data store!');
@@ -45,7 +43,7 @@ export default function LocationSelection() {
           await axios.get('https://www.bidrl.com/api/auctionfields').then((res) => {
             affiliateResponse = res.data.affiliates.model;
             // push into data store
-            AsyncStorage.setItem(affiliateListKey, JSON.stringify(affiliateResponse));
+            AsyncStorage.setItem(StorageKeys.affiliateListKey, JSON.stringify(affiliateResponse));
           });
         }
 
@@ -60,7 +58,9 @@ export default function LocationSelection() {
     fetchAffiliates();
 
     const fetchStoredCheckedAffiliates = async () => {
-      const storedCheckedAffiliates = JSON.parse(await AsyncStorage.getItem(selectedLocationsKey));
+      const storedCheckedAffiliates = JSON.parse(
+        await AsyncStorage.getItem(StorageKeys.selectedLocationsKey),
+      );
       if (storedCheckedAffiliates !== null) {
         updateCheckedAffiliates(storedCheckedAffiliates);
       }

@@ -1,8 +1,8 @@
 // import { View, Text } from 'react-native-web';
-import { bool, shape } from 'prop-types';
+import { bool, func, shape } from 'prop-types';
 import React from 'react';
 import {
-  Text, View, Image, Linking, StyleSheet,
+  Text, View, Image, Linking, StyleSheet, Pressable,
 } from 'react-native';
 
 const styles = StyleSheet.create({
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
 
 });
 
-export default function AuctionItem({ item, showImage }) {
+export default function AuctionItem({ item, showImage, updateBlacklist }) {
   return (
     <View style={styles.card}>
       <Image style={styles.thumb} source={{ uri: showImage ? item.images[0].thumb_url : '' }} />
@@ -65,13 +65,17 @@ export default function AuctionItem({ item, showImage }) {
           {item.current_bid}
         </Text>
       </View>
+
+      <Pressable onPress={() => updateBlacklist(item.id, true)}>
+        <Text>Hide Item</Text>
+      </Pressable>
+
     </View>
   );
 }
 
 AuctionItem.propTypes = {
-  item: shape({
-    images: shape([]),
-  }).isRequired,
+  item: shape({}).isRequired,
   showImage: bool.isRequired,
+  updateBlacklist: func.isRequired,
 };
