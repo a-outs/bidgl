@@ -1,4 +1,4 @@
-import { func, shape } from 'prop-types';
+import { arrayOf, func, shape } from 'prop-types';
 import React from 'react';
 import { Text, View } from 'react-native';
 
@@ -29,5 +29,5 @@ export default function Location({ location, onLocationCheck, checkedAffiliates 
 Location.propTypes = {
   location: shape({}).isRequired,
   onLocationCheck: func.isRequired,
-  checkedAffiliates: shape([]).isRequired,
+  checkedAffiliates: arrayOf(shape({})).isRequired,
 };

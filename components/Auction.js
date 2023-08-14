@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuctionItem from './AuctionItem';
 import StorageKeys from '../StorageKeys';
 
-export default function Auction({ auction }) {
+export default function Auction({ auction, location }) {
   const [items, setItems] = useState(null);
   const [showImages, setShowImages] = useState(false);
   const [itemBlacklist, setItemBlacklist] = useState([]);
@@ -16,7 +16,7 @@ export default function Auction({ auction }) {
       // fetch from API
       axios.post('https://www.bidrl.com/api/getitems', toFormData({
         auction_id: auction.id,
-        'filters[perpage]': '999',
+        'filters[perpage]': auction.item_count,
         item_type: 'itemlist',
         lotnum: '',
         seqnum: '',
@@ -27,26 +27,44 @@ export default function Auction({ auction }) {
         console.log(res.data);
         setItems(res.data);
       });
+      const blacklist = JSON.parse(await AsyncStorage.getItem(StorageKeys.itemBlacklistKey));
+      setItemBlacklist(blacklist);
     };
     checkAndFetchItems();
   }, []);
 
   const updateBlacklist = async (id, add) => {
     let blacklist = JSON.parse(await AsyncStorage.getItem(StorageKeys.itemBlacklistKey));
+    // initialize blacklist object
     if (blacklist == null) {
-      blacklist = [];
+      blacklist = {};
     }
-    blacklist = blacklist.filter((i) => i !== id);
+    // initialize blacklist object for location
+    if (blacklist[location.id] === undefined) {
+      blacklist[location.id] = {};
+    }
+    // initialize blacklist list for this auction
+    if (blacklist[location.id][auction.id] === undefined) {
+      blacklist[location.id][auction.id] = [];
+    }
+    blacklist[location.id][auction.id] = blacklist[location.id][auction.id].filter((i) => i !== id);
     if (add) {
-      blacklist.push(id);
+      blacklist[location.id][auction.id].push(id);
     }
     await AsyncStorage.setItem(StorageKeys.itemBlacklistKey, JSON.stringify(blacklist));
     setItemBlacklist(blacklist);
   };
 
-  const filteredItems = items !== null
-    ? items.items.filter((item) => itemBlacklist.every((i) => i !== item.id))
-    : [];
+  let filteredItems = [];
+
+  if (items !== null) {
+    filteredItems = itemBlacklist[location.id] === undefined
+      || itemBlacklist[location.id][auction.id] === undefined
+      ? items.items
+      : items.items.filter(
+        (item) => itemBlacklist[location.id][auction.id].every((i) => i !== item.id),
+      );
+  }
 
   return (
     <View>
@@ -81,5 +99,8 @@ export default function Auction({ auction }) {
 Auction.propTypes = {
   auction: shape({
     title: string,
+  }).isRequired,
+  location: shape({
+    id: string,
   }).isRequired,
 };

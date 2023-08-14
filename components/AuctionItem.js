@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
     elevation: 1,
     marginVertical: 10,
     marginHorizontal: 10,
+    width: '20%',
   },
   thumb: {
     height: 130,
