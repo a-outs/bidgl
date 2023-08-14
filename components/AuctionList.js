@@ -18,7 +18,6 @@ export default function AuctionList({ location }) {
 
       // remove blacklist items from old auctions
       const blacklist = JSON.parse(await AsyncStorage.getItem(StorageKeys.itemBlacklistKey));
-      console.log(blacklist);
       // initialize blacklist object for location
       if (blacklist != null && blacklist[location.id] !== undefined) {
         const newLocationObject = {};
@@ -29,7 +28,6 @@ export default function AuctionList({ location }) {
             return obj;
           }, {});
         blacklist[location.id] = newLocationObject;
-        console.log(blacklist);
       }
       await AsyncStorage.setItem(StorageKeys.itemBlacklistKey, JSON.stringify(blacklist));
 

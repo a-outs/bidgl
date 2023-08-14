@@ -59,7 +59,8 @@ export default function Auction({ auction, location, updateBlacklist }) {
   let filteredItems = [];
 
   if (items !== null) {
-    filteredItems = itemBlacklist[location.id] === undefined
+    filteredItems = itemBlacklist == null
+      || itemBlacklist[location.id] === undefined
       || itemBlacklist[location.id][auction.id] === undefined
       ? items.items
       : items.items.filter(
