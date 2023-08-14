@@ -1,15 +1,16 @@
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { shape, string } from 'prop-types';
+import { func, shape, string } from 'prop-types';
 import axios, { toFormData } from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { TouchableOpacity } from 'react-native-web';
 import AuctionItem from './AuctionItem';
 import StorageKeys from '../StorageKeys';
 
-export default function Auction({ auction, location }) {
+export default function Auction({ auction, location, updateBlacklist }) {
   const [items, setItems] = useState(null);
   const [showImages, setShowImages] = useState(false);
-  const [itemBlacklist, setItemBlacklist] = useState([]);
+  const [itemBlacklist, setItemBlacklist] = useState({});
 
   useEffect(() => {
     const checkAndFetchItems = async () => {
@@ -33,7 +34,7 @@ export default function Auction({ auction, location }) {
     checkAndFetchItems();
   }, []);
 
-  const updateBlacklist = async (id, add) => {
+  const updateItemBlacklist = async (id, add) => {
     let blacklist = JSON.parse(await AsyncStorage.getItem(StorageKeys.itemBlacklistKey));
     // initialize blacklist object
     if (blacklist == null) {
@@ -68,9 +69,12 @@ export default function Auction({ auction, location }) {
 
   return (
     <View>
-      <Pressable onPress={() => setShowImages(!showImages)}>
+      <TouchableOpacity style={{ backgroundColor: 'gray' }} onPress={() => setShowImages(!showImages)}>
         <Text>{showImages ? 'hide images' : 'show images'}</Text>
-      </Pressable>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => updateBlacklist(auction.id, true)}>
+        <Text>Hide Auction</Text>
+      </TouchableOpacity>
       <Text style={{ fontSize: 18, textAlign: 'center' }}>
         {auction.title}
       </Text>
@@ -86,7 +90,7 @@ export default function Auction({ auction, location }) {
               key={item.id}
               item={item}
               showImage={showImages}
-              updateBlacklist={updateBlacklist}
+              updateBlacklist={updateItemBlacklist}
             />
           ),
         )
@@ -103,4 +107,5 @@ Auction.propTypes = {
   location: shape({
     id: string,
   }).isRequired,
+  updateBlacklist: func.isRequired,
 };

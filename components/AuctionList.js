@@ -8,6 +8,7 @@ import StorageKeys from '../StorageKeys';
 
 export default function AuctionList({ location }) {
   const [auctions, setAuctions] = useState({});
+  const [auctionBlacklist, setAuctionBlacklist] = useState({});
 
   useEffect(() => {
     axios.get(`https://www.bidrl.com/api/landingPage/${location.url}`).then(async (res) => {
@@ -32,16 +33,42 @@ export default function AuctionList({ location }) {
       }
       await AsyncStorage.setItem(StorageKeys.itemBlacklistKey, JSON.stringify(blacklist));
 
+      setAuctionBlacklist(JSON.parse(await AsyncStorage.getItem(StorageKeys.auctionBlacklistKey)));
+
       setAuctions(res.data.auctions);
     });
   }, []);
 
+  const updateBlacklist = async (id, add) => {
+    let blacklist = JSON.parse(await AsyncStorage.getItem(StorageKeys.auctionBlacklistKey));
+    // initialize blacklist object
+    if (blacklist == null) {
+      blacklist = {};
+    }
+    // initialize blacklist object for location
+    if (blacklist[location.id] === undefined) {
+      blacklist[location.id] = [];
+    }
+    blacklist[location.id] = blacklist[location.id].filter((i) => i !== id);
+    if (add) {
+      blacklist[location.id].push(id);
+    }
+    await AsyncStorage.setItem(StorageKeys.auctionBlacklistKey, JSON.stringify(blacklist));
+    setAuctionBlacklist(blacklist);
+  };
+
+  const auctionList = Object.values(auctions);
+  const auctionsToShow = auctionBlacklist != null && auctionBlacklist[location.id] !== undefined
+    ? auctionList.filter((auction) => !auctionBlacklist[location.id].includes(auction.id))
+    : auctionList;
+
   return (
     <View>
-      {Object.values(auctions).map((auction) => (
+      {auctionsToShow.map((auction) => (
         <Auction
           auction={auction}
           location={location}
+          updateBlacklist={updateBlacklist}
           key={auction.id}
         />
       ))}
