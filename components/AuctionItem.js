@@ -43,7 +43,12 @@ const styles = StyleSheet.create({
     fontSize: 22,
     color: 'blue',
   },
-
+  hide: {
+    position: 'absolute',
+    width: '10%',
+    right: 0,
+    backgroundColor: 'red',
+  },
 });
 
 export default function AuctionItem({ item, showImage, updateBlacklist }) {
@@ -67,9 +72,11 @@ export default function AuctionItem({ item, showImage, updateBlacklist }) {
         </Text>
       </View>
 
-      <Pressable onPress={() => updateBlacklist(item.id, true)}>
-        <Text>Hide Item</Text>
-      </Pressable>
+      <View style={styles.hide}>
+        <Pressable onPress={() => updateBlacklist(item.id, true)}>
+          <Text accessibilityHint="hide item">X</Text>
+        </Pressable>
+      </View>
 
     </View>
   );
