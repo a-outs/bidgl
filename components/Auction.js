@@ -7,7 +7,9 @@ import { TouchableOpacity } from 'react-native-web';
 import AuctionItem from './AuctionItem';
 import StorageKeys from '../StorageKeys';
 
-export default function Auction({ auction, location, updateBlacklist }) {
+export default function Auction({
+  auction, location, updateBlacklist, updateFavorites,
+}) {
   const [items, setItems] = useState(null);
   const [showImages, setShowImages] = useState(false);
   const [itemBlacklist, setItemBlacklist] = useState({});
@@ -92,6 +94,7 @@ export default function Auction({ auction, location, updateBlacklist }) {
               item={item}
               showImage={showImages}
               updateBlacklist={updateItemBlacklist}
+              updateFavorites={updateFavorites}
             />
           ),
         )
@@ -112,4 +115,5 @@ Auction.propTypes = {
     id: string,
   }).isRequired,
   updateBlacklist: func.isRequired,
+  updateFavorites: func.isRequired,
 };

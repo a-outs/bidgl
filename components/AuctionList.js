@@ -5,10 +5,12 @@ import { shape, string } from 'prop-types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Auction from './Auction';
 import StorageKeys from '../StorageKeys';
+import Favorites from './Favorites';
 
 export default function AuctionList({ location }) {
   const [auctions, setAuctions] = useState({});
   const [auctionBlacklist, setAuctionBlacklist] = useState({});
+  const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
     axios.get(`https://www.bidrl.com/api/landingPage/${location.url}`).then(async (res) => {
@@ -34,6 +36,9 @@ export default function AuctionList({ location }) {
       setAuctionBlacklist(JSON.parse(await AsyncStorage.getItem(StorageKeys.auctionBlacklistKey)));
 
       setAuctions(res.data.auctions);
+
+      const fetchedFavorites = JSON.parse(await AsyncStorage.getItem(StorageKeys.favoritesKey));
+      setFavorites(fetchedFavorites == null ? [] : fetchedFavorites[location.id]);
     });
   }, []);
 
@@ -55,6 +60,24 @@ export default function AuctionList({ location }) {
     setAuctionBlacklist(blacklist);
   };
 
+  const updateFavorites = async (id, add) => {
+    let favoriteList = JSON.parse(await AsyncStorage.getItem(StorageKeys.favoritesKey));
+    // initialize blacklist object
+    if (favoriteList == null) {
+      favoriteList = {};
+    }
+    // initialize blacklist object for location
+    if (favoriteList[location.id] === undefined) {
+      favoriteList[location.id] = [];
+    }
+    favoriteList[location.id] = favoriteList[location.id].filter((i) => i !== id);
+    if (add) {
+      favoriteList[location.id].push(id);
+    }
+    await AsyncStorage.setItem(StorageKeys.favoritesKey, JSON.stringify(favoriteList));
+    setFavorites(favoriteList[location.id]);
+  };
+
   const auctionList = Object.values(auctions);
   const auctionsToShow = auctionBlacklist != null && auctionBlacklist[location.id] !== undefined
     ? auctionList.filter((auction) => !auctionBlacklist[location.id].includes(auction.id))
@@ -62,11 +85,13 @@ export default function AuctionList({ location }) {
 
   return (
     <View>
+      <Favorites favorites={favorites == null ? [] : favorites} updateFavorites={updateFavorites} />
       {auctionsToShow.map((auction) => (
         <Auction
           auction={auction}
           location={location}
           updateBlacklist={updateBlacklist}
+          updateFavorites={updateFavorites}
           key={auction.id}
         />
       ))}

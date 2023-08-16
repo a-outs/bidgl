@@ -49,9 +49,19 @@ const styles = StyleSheet.create({
     right: 0,
     backgroundColor: 'red',
   },
+  favorite: {
+    position: 'absolute',
+    width: '10%',
+    left: 0,
+    backgroundColor: 'green',
+  },
 });
 
-export default function AuctionItem({ item, showImage, updateBlacklist }) {
+export default function AuctionItem({
+  item, showImage, updateBlacklist, updateFavorites,
+}) {
+  const url = item.item_url || item.url;
+
   return (
     <View style={styles.card}>
       <Image style={styles.thumb} source={{ uri: showImage ? item.images[0].thumb_url : '' }} />
@@ -59,14 +69,13 @@ export default function AuctionItem({ item, showImage, updateBlacklist }) {
       <View>
         <TouchableHighlight
           onPress={() => {
-            Linking.openURL(item.item_url);
+            Linking.openURL(url);
           }}
         >
-          <Text href={item.item_url} style={styles.hyperlinkStyle}>{item.title}</Text>
+          <Text href={url} style={styles.hyperlinkStyle}>{item.title}</Text>
         </TouchableHighlight>
         <Text>
           Current Bid: $
-          {' '}
           {item.current_bid}
         </Text>
       </View>
@@ -74,6 +83,12 @@ export default function AuctionItem({ item, showImage, updateBlacklist }) {
       <View style={styles.hide}>
         <Pressable onPress={() => updateBlacklist(item.id, true)}>
           <Text accessibilityHint="hide item">X</Text>
+        </Pressable>
+      </View>
+
+      <View style={styles.favorite}>
+        <Pressable onPress={() => updateFavorites(item.id, true)}>
+          <Text accessibilityHint="Favorite Item">!</Text>
         </Pressable>
       </View>
 
@@ -85,4 +100,5 @@ AuctionItem.propTypes = {
   item: shape({}).isRequired,
   showImage: bool.isRequired,
   updateBlacklist: func.isRequired,
+  updateFavorites: func.isRequired,
 };
