@@ -2,7 +2,7 @@
 import { bool, func, shape } from 'prop-types';
 import React from 'react';
 import {
-  Text, View, Image, Linking, StyleSheet, Pressable,
+  Text, View, Image, Linking, StyleSheet, Pressable, TouchableHighlight,
 } from 'react-native';
 
 const styles = StyleSheet.create({
@@ -57,14 +57,13 @@ export default function AuctionItem({ item, showImage, updateBlacklist }) {
       <Image style={styles.thumb} source={{ uri: showImage ? item.images[0].thumb_url : '' }} />
 
       <View>
-        <Text
-          style={styles.hyperlinkStyle}
+        <TouchableHighlight
           onPress={() => {
             Linking.openURL(item.item_url);
           }}
         >
-          {item.title}
-        </Text>
+          <Text href={item.item_url} style={styles.hyperlinkStyle}>{item.title}</Text>
+        </TouchableHighlight>
         <Text>
           Current Bid: $
           {' '}

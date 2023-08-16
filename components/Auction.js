@@ -97,6 +97,9 @@ export default function Auction({ auction, location, updateBlacklist }) {
         )
           : <Text>Loading...</Text>}
       </View>
+      <TouchableOpacity onPress={() => updateBlacklist(auction.id, true)}>
+        <Text>Hide Above Auction</Text>
+      </TouchableOpacity>
     </View>
   );
 }
