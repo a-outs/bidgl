@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TouchableOpacity } from 'react-native-web';
 import AuctionItem from './AuctionItem';
 import StorageKeys from '../StorageKeys';
+import datesAreOnSameDay from '../Utility';
 
 export default function Auction({
   auction, location, updateBlacklist, updateFavorites,
@@ -71,14 +72,24 @@ export default function Auction({
   }
 
   return (
-    <View>
+    <View style={{
+      borderColor: 'black',
+      borderWidth: '3px',
+      borderRadius: '15px',
+    }}
+    >
       <TouchableOpacity style={{ backgroundColor: 'gray' }} onPress={() => setShowImages(!showImages)}>
         <Text>{showImages ? 'hide images' : 'show images'}</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => updateBlacklist(auction.id, true)}>
         <Text>Hide Auction</Text>
       </TouchableOpacity>
-      <Text style={{ fontSize: 18, textAlign: 'center' }}>
+      <Text style={{
+        fontSize: 18,
+        textAlign: 'center',
+        color: datesAreOnSameDay(new Date(), new Date(auction.ends)) ? 'red' : 'black',
+      }}
+      >
         {auction.title}
       </Text>
       <View

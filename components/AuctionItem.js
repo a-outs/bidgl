@@ -4,6 +4,7 @@ import React from 'react';
 import {
   Text, View, Image, Linking, StyleSheet, Pressable, TouchableHighlight,
 } from 'react-native';
+import datesAreOnSameDay from '../Utility';
 
 const styles = StyleSheet.create({
   card: {
@@ -111,7 +112,3 @@ AuctionItem.propTypes = {
   updateBlacklist: func.isRequired,
   updateFavorites: func.isRequired,
 };
-
-const datesAreOnSameDay = (first, second) => first.getFullYear() === second.getFullYear()
-  && first.getMonth() === second.getMonth()
-  && first.getDate() === second.getDate();
