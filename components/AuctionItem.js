@@ -61,6 +61,9 @@ export default function AuctionItem({
   item, showImage, updateBlacklist, updateFavorites,
 }) {
   const url = item.item_url || item.url;
+  const dateTime = new Date((parseInt(item.end_time, 10) - item.time_offset) * 1000);
+  const currentDate = new Date();
+  const sameDay = datesAreOnSameDay(currentDate, dateTime);
 
   return (
     <View style={styles.card}>
@@ -77,6 +80,12 @@ export default function AuctionItem({
         <Text>
           Current Bid: $
           {item.current_bid}
+        </Text>
+        <Text style={{ color: sameDay ? 'red' : 'black' }}>
+          {dateTime.toLocaleDateString()}
+        </Text>
+        <Text>
+          {dateTime.toLocaleTimeString()}
         </Text>
       </View>
 
@@ -102,3 +111,7 @@ AuctionItem.propTypes = {
   updateBlacklist: func.isRequired,
   updateFavorites: func.isRequired,
 };
+
+const datesAreOnSameDay = (first, second) => first.getFullYear() === second.getFullYear()
+  && first.getMonth() === second.getMonth()
+  && first.getDate() === second.getDate();
