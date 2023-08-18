@@ -2,14 +2,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { View } from 'react-native';
+import { arrayOf, func, shape } from 'prop-types';
 import Location from './Location';
-import SelectedLocation from './SelectedLocation';
 import styles from '../AppStyles';
 import StorageKeys from '../StorageKeys';
 
-export default function LocationSelection() {
+export default function LocationSelection({ checkedAffiliates, updateCheckedAffiliates }) {
   const [affiliateList, updateAffiliateList] = useState([]);
-  const [checkedAffiliates, updateCheckedAffiliates] = useState([]);
 
   // callback for when a location is checked or uncheckd
   const locationChecked = (affiliate, checked) => {
@@ -82,14 +81,11 @@ export default function LocationSelection() {
           />
         ))}
       </View>
-      <View>
-        {checkedAffiliates.map((affiliate) => (
-          <SelectedLocation
-            key={affiliate.id}
-            location={affiliate}
-          />
-        ))}
-      </View>
     </View>
   );
 }
+
+LocationSelection.propTypes = {
+  checkedAffiliates: arrayOf(shape({})).isRequired,
+  updateCheckedAffiliates: func.isRequired,
+};

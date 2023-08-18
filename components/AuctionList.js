@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { View } from 'react-native';
 import axios from 'axios';
 import { shape, string } from 'prop-types';
@@ -6,11 +6,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Auction from './Auction';
 import StorageKeys from '../StorageKeys';
 import Favorites from './Favorites';
+import { useNotification } from '../contexts/NotificationContext';
 
 export default function AuctionList({ location }) {
   const [auctions, setAuctions] = useState({});
   const [auctionBlacklist, setAuctionBlacklist] = useState({});
   const [favorites, setFavorites] = useState([]);
+
+  const { addMessage } = useNotification();
 
   useEffect(() => {
     axios.get(`https://www.bidrl.com/api/landingPage/${location.url}`).then(async (res) => {
@@ -18,7 +21,7 @@ export default function AuctionList({ location }) {
 
       const auctionIds = Object.values(res.data.auctions).map((auction) => auction.id);
 
-      // remove blacklist items from old auctions
+      // remove old auctions from blacklist
       const blacklist = JSON.parse(await AsyncStorage.getItem(StorageKeys.itemBlacklistKey));
       // initialize blacklist object for location
       if (blacklist != null && blacklist[location.id] !== undefined) {
@@ -42,7 +45,7 @@ export default function AuctionList({ location }) {
     });
   }, []);
 
-  const updateBlacklist = async (id, add) => {
+  const updateBlacklist = useCallback(async (id, add) => {
     let blacklist = JSON.parse(await AsyncStorage.getItem(StorageKeys.auctionBlacklistKey));
     // initialize blacklist object
     if (blacklist == null) {
@@ -58,9 +61,13 @@ export default function AuctionList({ location }) {
     }
     await AsyncStorage.setItem(StorageKeys.auctionBlacklistKey, JSON.stringify(blacklist));
     setAuctionBlacklist(blacklist);
-  };
+  }, [auctionBlacklist]);
 
-  const updateFavorites = async (id, add) => {
+  const updateFavorites = useCallback(async (id, add) => {
+    console.log(`Adding ${id} to favorites...`);
+
+    addMessage(`Adding ${id} to favorites...`);
+
     let favoriteList = JSON.parse(await AsyncStorage.getItem(StorageKeys.favoritesKey));
     // initialize blacklist object
     if (favoriteList == null) {
@@ -76,7 +83,9 @@ export default function AuctionList({ location }) {
     }
     await AsyncStorage.setItem(StorageKeys.favoritesKey, JSON.stringify(favoriteList));
     setFavorites(favoriteList[location.id]);
-  };
+  }, [favorites]);
+
+  const callUpdateFavorites = useCallback((id, add) => updateFavorites(id, add), []);
 
   const auctionList = Object.values(auctions);
   const auctionsToShow = auctionBlacklist != null && auctionBlacklist[location.id] !== undefined
@@ -85,13 +94,16 @@ export default function AuctionList({ location }) {
 
   return (
     <View>
-      <Favorites favorites={favorites == null ? [] : favorites} updateFavorites={updateFavorites} />
+      <Favorites
+        favorites={favorites == null ? [] : favorites}
+        updateFavorites={callUpdateFavorites}
+      />
       {auctionsToShow.map((auction) => (
         <Auction
           auction={auction}
           location={location}
           updateBlacklist={updateBlacklist}
-          updateFavorites={updateFavorites}
+          updateFavorites={callUpdateFavorites}
           key={auction.id}
         />
       ))}

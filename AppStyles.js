@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
     padding: 10,
     gap: 10,
   },
-  locationSelectionStyle: {
+  containerStyle: {
     alignItems: 'center',
     maxWidth: 700,
   },

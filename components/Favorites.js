@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { View } from 'react-native-web';
 import { arrayOf, func, string } from 'prop-types';
 import axios, { toFormData } from 'axios';
 import AuctionItem from './AuctionItem';
 
-export default function Favorites({ favorites, updateFavorites }) {
+const Favorites = memo(({ favorites, updateFavorites }) => {
   const [itemData, setItemData] = useState([]);
 
   useEffect(() => {
@@ -33,7 +33,9 @@ export default function Favorites({ favorites, updateFavorites }) {
       ))}
     </View>
   );
-}
+});
+
+export default Favorites;
 
 Favorites.propTypes = {
   favorites: arrayOf(string.isRequired).isRequired,
