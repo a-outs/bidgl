@@ -1,14 +1,15 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { View } from 'react-native';
 import axios from 'axios';
-import { shape, string } from 'prop-types';
+import { bool, shape, string } from 'prop-types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Auction from './Auction';
 import StorageKeys from '../StorageKeys';
 import Favorites from './Favorites';
 import { useNotification } from '../contexts/NotificationContext';
+import datesAreOnSameDay from '../Utility';
 
-export default function AuctionList({ location }) {
+export default function AuctionList({ location, endingToday }) {
   const [auctions, setAuctions] = useState({});
   const [auctionBlacklist, setAuctionBlacklist] = useState({});
   const [favorites, setFavorites] = useState([]);
@@ -88,9 +89,13 @@ export default function AuctionList({ location }) {
   const callUpdateFavorites = useCallback((id, add) => updateFavorites(id, add), []);
 
   const auctionList = Object.values(auctions);
-  const auctionsToShow = auctionBlacklist != null && auctionBlacklist[location.id] !== undefined
+  let auctionsToShow = auctionBlacklist != null && auctionBlacklist[location.id] !== undefined
     ? auctionList.filter((auction) => !auctionBlacklist[location.id].includes(auction.id))
     : auctionList;
+
+  auctionsToShow = !endingToday
+    ? auctionsToShow
+    : auctionsToShow.filter((auction) => datesAreOnSameDay(new Date(), new Date(auction.ends)));
 
   return (
     <View>
@@ -113,4 +118,5 @@ export default function AuctionList({ location }) {
 
 AuctionList.propTypes = {
   location: shape({ url: string }).isRequired,
+  endingToday: bool.isRequired,
 };

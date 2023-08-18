@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import styles from './AppStyles';
 import LocationSelection from './components/LocationSelection';
 import NotificationProvider from './contexts/NotificationContext';
@@ -8,6 +8,7 @@ import AuctionList from './components/AuctionList';
 
 export default function App() {
   const [checkedAffiliates, updateCheckedAffiliates] = useState([]);
+  const [endingToday, setEndingToday] = useState(true);
 
   return (
     <View style={styles.body}>
@@ -26,6 +27,11 @@ export default function App() {
             checkedAffiliates={checkedAffiliates}
             updateCheckedAffiliates={updateCheckedAffiliates}
           />
+          <Pressable onPress={() => setEndingToday(!endingToday)}>
+            <Text style={{ color: endingToday ? 'red' : 'black' }}>
+              Ending Today
+            </Text>
+          </Pressable>
           <View>
             {checkedAffiliates.map((affiliate) => (
               <View
@@ -36,7 +42,7 @@ export default function App() {
                 >
                   {affiliate.name}
                 </Text>
-                <AuctionList location={affiliate} />
+                <AuctionList location={affiliate} endingToday={endingToday} />
               </View>
             ))}
           </View>
