@@ -1,5 +1,5 @@
 import { Text, View } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { func, shape, string } from 'prop-types';
 import axios, { toFormData } from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -8,9 +8,9 @@ import AuctionItem from './AuctionItem';
 import StorageKeys from '../StorageKeys';
 import datesAreOnSameDay from '../Utility';
 
-export default function Auction({
+const Auction = memo(({
   auction, location, updateBlacklist, updateFavorites,
-}) {
+}) => {
   const [items, setItems] = useState(null);
   const [showImages, setShowImages] = useState(false);
   const [itemBlacklist, setItemBlacklist] = useState({});
@@ -25,7 +25,7 @@ export default function Auction({
         lotnum: '',
         seqnum: '',
         close_groups: '',
-        show_closed: 'closeed',
+        show_closed: 'closed',
         perpetual: '',
       })).then((res) => {
         console.log(res.data);
@@ -116,7 +116,7 @@ export default function Auction({
       </TouchableOpacity>
     </View>
   );
-}
+});
 
 Auction.propTypes = {
   auction: shape({
@@ -128,3 +128,5 @@ Auction.propTypes = {
   updateBlacklist: func.isRequired,
   updateFavorites: func.isRequired,
 };
+
+export default Auction;
